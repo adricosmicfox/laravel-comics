@@ -13,6 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+$comics_array = collect(config("comics"));
+
+Route::get('/', function () use ($comics_array) {
+    $data = [
+        "comics_array" => $comics_array
+    ];
+    return view('homepage', $data);
+})->name('homepage');
+
+Route::get('/comics/{id}', function ($id) use ($comics_array) {
+    $actual_comics = $comics_array->where('id', $id)->first();
+    $data = [
+        'comics' => $actual_comics
+    ];
+    return view('single-comic', $data);
+})->name('single-comic');
